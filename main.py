@@ -1,17 +1,22 @@
+import os
 import openai
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-# Set your API key directly (Not recommended for production!)
-openai.api_key = "XYZ"
+# Load environment variables from .env file
+load_dotenv()
+
+# Set OpenAI API key from environment variable
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
 # Allow requests from your website's domain
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['https://veganizin'],  # Update if your domain is a full URL, e.g.: 'https://veganizin.com'
+    allow_origins=['https://veganizin.com'],  # Make sure this matches your live site
     allow_methods=['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
     allow_headers=['*'],
 )
