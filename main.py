@@ -13,12 +13,12 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = FastAPI()
 
-# Allow requests from your website's domain
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['https://veganizin.com'],  # Make sure this matches your live site
-    allow_methods=['POST', 'GET', 'PUT', 'DELETE', 'OPTIONS'],
-    allow_headers=['*'],
+    allow_origins=["https://your-wordpress-site.com"],  # Adjust this to your frontend's origin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class VeganizeRequest(BaseModel):
