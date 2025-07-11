@@ -1,20 +1,18 @@
-# Use official Python slim image as the base
+# Dockerfile
 FROM python:3.10-slim
 
-# Set work directory in the container
+# Set working directory
 WORKDIR /app
 
-# Only copy requirements first for better cache usage
-COPY requirements.txt .
+# Copy files
+COPY . /app
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose the port FastAPI will run on
+# Expose default Cloud Run port
+ENV PORT=8080
 EXPOSE 8080
 
-# Command to run the FastAPI app with uvicorn
+# Run the app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
