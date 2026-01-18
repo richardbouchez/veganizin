@@ -1,18 +1,26 @@
-# Dockerfile
-FROM python:3.10-slim
+# Build Stage
+FROM node:18-alpine AS build
 
-# Set working directory
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
 
-# Copy files
-COPY . /app
+# Production Stage
+FROM node:18-alpine
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
+COPY package*.json ./
+# Only install production dependencies
+RUN npm install --only=production
 
-# Expose default Cloud Run port
-ENV PORT=8080
+# Copy built assets from build stage
+COPY --from=build /app/dist ./dist
+# Copy backend server
+COPY server.js .
+
 EXPOSE 8080
+ENV PORT=8080
 
-# Run the app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["node", "server.js"]
